@@ -2,38 +2,55 @@ import React, { useEffect, useState } from "react";
 import "../styles/styles.css";
 import axios from "axios";
 
+const BASE_URL = "https://dzap-v1.onrender.com";
 const ConverterForm = () => {
   const [cryptoCurrenies, setCryptoCurrenies] = useState([]);
-  const [cryptocoin, setCryptoCoin] = useState("");
+  const [cryptocurrency, setCryptoCurrency] = useState("");
   const [amount, setAmount] = useState("");
-  const [currency, setCurrency] = useState("USD");
+  const [targetCurrency, setTargetCurrency] = useState("USD");
   const [convertedAmount, setConvertedAmount] = useState("");
+  const [cryptoError, setCryptoError] = useState("");
+  const [amountError, setamountError] = useState("");
   useEffect(() => {
     const fetchCryptoCurrencies = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:3003/dzap/cryptoCurrencies"
-        );
-        console.log(response.cryptocurrencies);
-        setCryptoCurrenies(response);
+        const response = await axios.get(`${BASE_URL}/dzap/cryptoCurrencies`);
+        setCryptoCurrenies(response.data.cryptocurrencies);
       } catch (error) {
         console.error("Error in fetching crypto currency", error);
       }
     };
     fetchCryptoCurrencies();
   }, []);
+  const handleCryptoCoin = (e) => {
+    setCryptoCurrency(e.target.value);
+    setCryptoError("");
+  };
+  const handleAmount = (e) => {
+    setAmount(e.target.value);
+    setamountError("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    try {
-      const res = await axios.post("", {
-        cryptocoin,
-        amount,
-        currency,
-      });
-      setConvertedAmount(res.data);
-    } catch (error) {
-      console.error("Error in converting currency", error);
+    if (!cryptocurrency) {
+      setCryptoError("Please select crypto currency");
+    }
+    if (!amount) {
+      setamountError("Please Enter amount");
+    }
+    if (cryptocurrency && amount) {
+      try {
+        const res = await axios.post(`${BASE_URL}/dzap/cryptoConvert`, {
+          cryptocurrency,
+          amount,
+          targetCurrency,
+        });
+        console.log(res.data.convertedAmount);
+        setConvertedAmount(res.data.convertedAmount);
+      } catch (error) {
+        console.error("Error in converting currency", error);
+      }
     }
   };
   return (
@@ -44,18 +61,16 @@ const ConverterForm = () => {
           <div className="form-group">
             <label>
               Crypto Currency
-              <select
-                value={cryptocoin}
-                onChange={(e) => setCryptoCoin(e.target.value)}
-              >
+              <select value={cryptocurrency} onChange={handleCryptoCoin}>
                 <option value="">Select Crypto Currency</option>
                 {cryptoCurrenies.map((coin) => (
-                  <option key={coin.id} value={coin}>
-                    {coin}
+                  <option key={coin.id} value={coin.symbol}>
+                    {coin.name}
                   </option>
                 ))}
               </select>
             </label>
+            <p className="error">{cryptoError}</p>
           </div>
           <div className="form-group">
             <label>
@@ -64,21 +79,22 @@ const ConverterForm = () => {
                 type="number"
                 value={amount}
                 placeholder="Enter Crypto Amount"
-                onChange={(e) => setAmount(e.target.value)}
+                onChange={handleAmount}
               />
             </label>
+            <p className="error">{amountError}</p>
           </div>
           <div className="form-group">
             <label>
               Select Currency
               <select
-                value={currency}
-                onChange={(e) => setCurrency(e.target.value)}
+                value={targetCurrency}
+                onChange={(e) => setTargetCurrency(e.target.value)}
               >
-                <option value="usd">USD</option>
-                <option value="eur">EUR</option>
-                <option value="inr">INR</option>
-                <option value="jpy">JPY</option>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="INR">INR</option>
+                <option value="GBP">GBP</option>
               </select>
             </label>
           </div>
@@ -87,8 +103,10 @@ const ConverterForm = () => {
           </div>
         </form>
         {convertedAmount && (
-          <p>
-            Converted Amount: {convertedAmount} {currency}
+          <p className="amount">
+            Converted Amount:{" "}
+            <span style={{ color: "#ed1717" }}>{targetCurrency}</span>{" "}
+            {convertedAmount}
           </p>
         )}
       </div>
