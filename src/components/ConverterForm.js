@@ -77,6 +77,8 @@ const ConverterForm = () => {
               Crypto Amount
               <input
                 type="number"
+                minLength={1}
+                maxLength={5}
                 value={amount}
                 placeholder="Enter Crypto Amount"
                 onChange={handleAmount}
@@ -95,6 +97,7 @@ const ConverterForm = () => {
                 <option value="EUR">EUR</option>
                 <option value="INR">INR</option>
                 <option value="GBP">GBP</option>
+                <option value="CNY">CNY</option>
               </select>
             </label>
           </div>
