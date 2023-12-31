@@ -1,7 +1,9 @@
+import ConverterForm from "./components/ConverterForm";
+import "./styles/app.css";
 function App() {
   return (
     <div className="App">
-      <p>sgghhghh</p>
+      <ConverterForm />
     </div>
   );
 }

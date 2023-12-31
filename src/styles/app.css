@@ -1,0 +1,13 @@
+body {
+    margin: 0;
+}
+
+.App {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('../assets/crypto.jpg');
+    background-size: cover;
+    background-position: center;
+    height: 100vh;
+}
