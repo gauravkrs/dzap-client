@@ -28,7 +28,7 @@ const ConverterForm = () => {
   };
   const handleAmount = (e) => {
     const value = e.target.value.slice(0, 9);
-    const amount = value < 1 ? "" : value;
+    const amount = value <= 0 ? "" : value;
     setAmount(amount);
     setamountError("");
   };
