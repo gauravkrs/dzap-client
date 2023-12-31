@@ -27,8 +27,8 @@ const ConverterForm = () => {
     setCryptoError("");
   };
   const handleAmount = (e) => {
-    const value = e.target.value.slice(0, 5);
-    const amount = value < 0 ? "" : value;
+    const value = e.target.value.slice(0, 9);
+    const amount = value < 1 ? "" : value;
     setAmount(amount);
     setamountError("");
   };
