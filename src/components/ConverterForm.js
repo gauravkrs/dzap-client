@@ -27,8 +27,8 @@ const ConverterForm = () => {
     setCryptoError("");
   };
   const handleAmount = (e) => {
-    const value = e.target.value.slice(0, 9);
-    const amount = value <= 0 ? "" : value;
+    const value = e.target.value.slice(0, 5);
+    const amount = value < 0 ? "" : value;
     setAmount(amount);
     setamountError("");
   };
@@ -41,7 +41,7 @@ const ConverterForm = () => {
     if (!amount) {
       setamountError("Please Enter amount");
     }
-    if (cryptocurrency && amount) {
+    if (cryptocurrency && amount > 0) {
       try {
         const res = await axios.post(`${BASE_URL}/dzap/cryptoConvert`, {
           cryptocurrency,
@@ -53,6 +53,8 @@ const ConverterForm = () => {
       } catch (error) {
         console.error("Error in converting currency", error);
       }
+    } else {
+      alert("Please enter amount above 0");
     }
   };
   return (
