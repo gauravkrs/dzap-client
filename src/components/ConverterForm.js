@@ -27,7 +27,9 @@ const ConverterForm = () => {
     setCryptoError("");
   };
   const handleAmount = (e) => {
-    setAmount(e.target.value);
+    const value = e.target.value.slice(0, 5);
+    const amount = value < 0 ? "" : value;
+    setAmount(amount);
     setamountError("");
   };
 
@@ -77,8 +79,6 @@ const ConverterForm = () => {
               Crypto Amount
               <input
                 type="number"
-                minLength={1}
-                maxLength={5}
                 value={amount}
                 placeholder="Enter Crypto Amount"
                 onChange={handleAmount}
